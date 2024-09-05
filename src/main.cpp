@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
+#include "FT6336U.h"
 #include "bme280_helper.h"
 #include "icm20948_helper.h"
 #include "qore-x_display.h"
@@ -14,6 +15,8 @@ void lvglTask(void *pvParameter);
 /* OBJECT INIT */
 Adafruit_BME280   bme;
 Adafruit_ICM20948 icm;
+FT6336U           ft6336u(I2C_SDA, I2C_SCL, RST_N_PIN, INT_N_PIN);
+static void       btn_event_cb(lv_event_t *e);
 
 /* GLOBAL VARIABLES INIT */
 sensors_event_t accel;
@@ -26,8 +29,6 @@ TFT_eSPI        tft;
 
 static void helloWorldFromLVGL();
 
-static uint32_t my_tick(void) { return millis(); }
-
 void setup() {
   uint8_t status;
 
@@ -36,10 +37,12 @@ void setup() {
   while (!Serial);  // time to get serial running
 
   /* DISPLAY INIT */
+  Serial.println("Initializing Qore-X LCD");
   lv_init();  // Initialize LVGL
   qoreXLCDInit();
 
   /* BME280 INIT */
+  Serial.println("Initializing BME280");
   status = bme.begin(0x76);
   if (!status) {
     Serial.println(
@@ -48,6 +51,7 @@ void setup() {
   }
 
   /* ICM 20948 INIT */
+  Serial.println("Initializing ICM20948");
   status = icm.begin_I2C(0x68);
   if (!status) {
     Serial.println("Failed to find ICM20948");
@@ -55,6 +59,7 @@ void setup() {
 
   getAndPrintICMSpecs();
 
+  Serial.println("Creating demo screen");
   helloWorldFromLVGL();
 
   Serial.print("\n===========================================\n");
@@ -65,15 +70,12 @@ void setup() {
 
 void loop() {
   /* PRINT BME280 DATA */
-  printBME280Values();
-  delay(DEFAULT_DELAY);
+  // printBME280Values();
+  // delay(DEFAULT_DELAY);
 
   /* PRINT ICM20948 DATA */
-  getAndPrintICMData(accel, gyro, mag, temp);
-  delay(DEFAULT_DELAY);
-
-  // lv_timer_handler();
-  // delay(5);
+  // getAndPrintICMData(accel, gyro, mag, temp);
+  // delay(DEFAULT_DELAY);
 }
 
 void lvglTask(void *pvParameter) {
@@ -100,10 +102,14 @@ static void helloWorldFromLVGL() {
       lv_button_create(lv_screen_active()); /*Add a button the current screen*/
   lv_obj_set_size(btn, 120, 50);            /*Set its size*/
   lv_obj_align(btn, LV_ALIGN_BOTTOM_MID, 0, 0);
-  // lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL,
-  //                     NULL); /*Assign a callback to the button*/
+  lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_PRESSED,
+                      NULL); /*Assign a callback to the button*/
 
   lv_obj_t *label2 = lv_label_create(btn); /*Add a label to the button*/
   lv_label_set_text(label2, "Press Me!");  /*Set the labels text*/
   lv_obj_center(label2);
+}
+
+static void btn_event_cb(lv_event_t *e) {
+  Serial.println("Clicked");
 }
