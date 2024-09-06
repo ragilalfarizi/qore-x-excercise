@@ -1,0 +1,3 @@
+[submodule "lib/Arduino-FT6336U"]
+	path = lib/Arduino-FT6336U
+	url = https://github.com/aselectroworks/Arduino-FT6336U

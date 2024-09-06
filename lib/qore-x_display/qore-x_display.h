@@ -5,6 +5,8 @@
 #include <lvgl.h>
 
 #include "FT6336U.h"
+#include "qore-x_bme280_screen.h"
+#include "qore-x_icm20948_screen.h"
 
 #define TFT_HOR_RES   240
 #define TFT_VER_RES   320
@@ -19,13 +21,19 @@
 /* GLOBAL VARIABLES */
 extern FT6336U ft6336u;
 
-
 enum ScreenID {
   StartUpMenu,
   BME280Menu,
   ICM20948Menu,
 };
 
-void setupScreens();
+enum ButtonType {
+  NEXT_BUTTON,
+  PREV_BUTTON,
+};
 
 void qoreXLCDInit();
+
+void setupScreens();
+
+void createBottomSwitch(lv_obj_t *parent);

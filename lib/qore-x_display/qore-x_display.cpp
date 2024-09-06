@@ -13,6 +13,7 @@ static void     touchInit();
 static uint32_t myTick(void);
 static void     myTouchpadRead(lv_indev_t *indev, lv_indev_data_t *data);
 static void     createStartUpScreen();
+static void     menuEventHandlerCB(lv_event_t *e);
 
 void qoreXLCDInit() {
   // Initialization of the display
@@ -25,14 +26,14 @@ void qoreXLCDInit() {
 }
 
 void setupScreens() {
-  // BME280Screen   = createBME280Screen();
-  // ICM20948Screen = createICM2094Screen();
+  BME280Screen   = createBME280Screen();
+  ICM20948Screen = createICM2094Screen();
 
   createStartUpScreen();
 
   delay(3000);
 
-  // lv_screen_load(BME280Screen);
+  lv_screen_load(BME280Screen);
 }
 
 static void createStartUpScreen() {
@@ -82,3 +83,39 @@ void myTouchpadRead(lv_indev_t *indev, lv_indev_data_t *data) {
 }
 /*use Arduinos millis() as tick source*/
 static uint32_t myTick(void) { return millis(); }
+
+void createBottomSwitch(lv_obj_t *parent) {
+  ButtonType btnType;
+
+  // create left button
+  lv_obj_t *prevBtn = lv_button_create(parent);
+  lv_obj_set_align(prevBtn, LV_ALIGN_BOTTOM_LEFT);
+  lv_obj_set_size(prevBtn, 100, 50);
+  lv_obj_add_event_cb(prevBtn, menuEventHandlerCB, LV_EVENT_PRESSED,
+                      reinterpret_cast<void *>(PREV_BUTTON));
+
+  // create right button
+  lv_obj_t *nextBtn = lv_button_create(parent);
+  lv_obj_set_align(nextBtn, LV_ALIGN_BOTTOM_RIGHT);
+  lv_obj_set_size(nextBtn, 100, 50);
+  lv_obj_add_event_cb(nextBtn, menuEventHandlerCB, LV_EVENT_PRESSED,
+                      reinterpret_cast<void *>(NEXT_BUTTON));
+}
+
+static void menuEventHandlerCB(lv_event_t *e) {
+  ButtonType btnType = static_cast<ButtonType>(
+      reinterpret_cast<intptr_t>(lv_event_get_user_data(e)));
+
+  switch (btnType) {
+    case NEXT_BUTTON:
+      Serial.println("Next button is pressed");
+      break;
+
+    case PREV_BUTTON:
+      Serial.println("Prev button is pressed");
+      break;
+
+    default:
+      break;
+  }
+}

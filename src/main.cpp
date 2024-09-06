@@ -63,10 +63,10 @@ void setup() {
 
   setupScreens();
 
-  lv_obj_t *demoScreen = lv_obj_create(NULL);
-  lv_scr_load(demoScreen);
+  /* lv_obj_t *demoScreen = lv_obj_create(NULL);
+  lv_scr_load(demoScreen); */
 
-  helloWorldFromLVGL();
+  // helloWorldFromLVGL();
 
   Serial.print("\n===========================================\n");
 
@@ -104,16 +104,16 @@ static void helloWorldFromLVGL() {
   lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
   // create button demo
-  lv_obj_t *btn =
-      lv_button_create(lv_screen_active()); /*Add a button the current screen*/
-  lv_obj_set_size(btn, 120, 50);            /*Set its size*/
-  lv_obj_align(btn, LV_ALIGN_BOTTOM_MID, 0, 0);
-  lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_PRESSED,
-                      NULL); /*Assign a callback to the button*/
+  // lv_obj_t *btn =
+  //     lv_button_create(lv_screen_active()); /*Add a button the current screen*/
+  // lv_obj_set_size(btn, 120, 50);            /*Set its size*/
+  // lv_obj_align(btn, LV_ALIGN_BOTTOM_MID, 0, 0);
+  // lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_PRESSED,
+  //                     NULL); /*Assign a callback to the button*/
 
-  lv_obj_t *label2 = lv_label_create(btn); /*Add a label to the button*/
-  lv_label_set_text(label2, "Press Me!");  /*Set the labels text*/
-  lv_obj_center(label2);
+  // lv_obj_t *label2 = lv_label_create(btn); /*Add a label to the button*/
+  // lv_label_set_text(label2, "Press Me!");  /*Set the labels text*/
+  // lv_obj_center(label2);
 }
 
 static void btn_event_cb(lv_event_t *e) { Serial.println("Clicked"); }
