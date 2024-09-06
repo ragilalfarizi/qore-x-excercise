@@ -1,9 +1,10 @@
 #include "qore-x_display.h"
 
 /* GLOBAL VARIABLES */
-lv_display_t *disp  = NULL;
-lv_indev_t   *indev = NULL;
-
+lv_display_t   *disp           = NULL;
+lv_indev_t     *indev          = NULL;
+lv_obj_t       *BME280Screen   = NULL;
+lv_obj_t       *ICM20948Screen = NULL;
 static uint32_t draw_buf[DRAW_BUF_SIZE / 4];
 
 /* STATIC FUNCTION PROTOTYPE */
@@ -11,6 +12,7 @@ static void     displayInit();
 static void     touchInit();
 static uint32_t myTick(void);
 static void     myTouchpadRead(lv_indev_t *indev, lv_indev_data_t *data);
+static void     createStartUpScreen();
 
 void qoreXLCDInit() {
   // Initialization of the display
@@ -20,6 +22,25 @@ void qoreXLCDInit() {
   // Initialization of the touch input
   Serial.println("Initializing the touch driver");
   touchInit();
+}
+
+void setupScreens() {
+  // BME280Screen   = createBME280Screen();
+  // ICM20948Screen = createICM2094Screen();
+
+  createStartUpScreen();
+
+  delay(3000);
+
+  // lv_screen_load(BME280Screen);
+}
+
+static void createStartUpScreen() {
+  LV_IMAGE_DECLARE(screen_start_up);
+
+  lv_obj_t *boot_screen = lv_image_create(lv_screen_active());
+  lv_image_set_src(boot_screen, &screen_start_up);
+  lv_obj_align(boot_screen, LV_ALIGN_CENTER, 0, 0);
 }
 
 void touchInit() {

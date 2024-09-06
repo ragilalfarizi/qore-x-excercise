@@ -16,6 +16,16 @@
 #define RST_N_PIN -1
 #define INT_N_PIN 4
 
+/* GLOBAL VARIABLES */
 extern FT6336U ft6336u;
+
+
+enum ScreenID {
+  StartUpMenu,
+  BME280Menu,
+  ICM20948Menu,
+};
+
+void setupScreens();
 
 void qoreXLCDInit();

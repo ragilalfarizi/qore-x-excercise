@@ -60,6 +60,12 @@ void setup() {
   getAndPrintICMSpecs();
 
   Serial.println("Creating demo screen");
+
+  setupScreens();
+
+  lv_obj_t *demoScreen = lv_obj_create(NULL);
+  lv_scr_load(demoScreen);
+
   helloWorldFromLVGL();
 
   Serial.print("\n===========================================\n");
@@ -110,6 +116,4 @@ static void helloWorldFromLVGL() {
   lv_obj_center(label2);
 }
 
-static void btn_event_cb(lv_event_t *e) {
-  Serial.println("Clicked");
-}
+static void btn_event_cb(lv_event_t *e) { Serial.println("Clicked"); }
