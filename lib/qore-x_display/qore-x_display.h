@@ -8,6 +8,10 @@
 #include "qore-x_bme280_screen.h"
 #include "qore-x_icm20948_screen.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define TFT_HOR_RES   240
 #define TFT_VER_RES   320
 #define TFT_ROTATION  LV_DISPLAY_ROTATION_0
@@ -37,3 +41,7 @@ void qoreXLCDInit();
 void setupScreens();
 
 void createBottomSwitch(lv_obj_t *parent);
+
+#ifdef __cplusplus
+}
+#endif
