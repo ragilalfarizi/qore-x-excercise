@@ -5,15 +5,17 @@ lv_display_t   *disp           = NULL;
 lv_indev_t     *indev          = NULL;
 lv_obj_t       *BME280Screen   = NULL;
 lv_obj_t       *ICM20948Screen = NULL;
+lv_obj_t       *startUpScreen  = NULL;
 static uint32_t draw_buf[DRAW_BUF_SIZE / 4];
+static ScreenID currentScreen;
 
 /* STATIC FUNCTION PROTOTYPE */
-static void     displayInit();
-static void     touchInit();
-static uint32_t myTick(void);
-static void     myTouchpadRead(lv_indev_t *indev, lv_indev_data_t *data);
-static void     createStartUpScreen();
-static void     menuEventHandlerCB(lv_event_t *e);
+static void      displayInit();
+static void      touchInit();
+static uint32_t  myTick(void);
+static void      myTouchpadRead(lv_indev_t *indev, lv_indev_data_t *data);
+static lv_obj_t *createStartUpScreen();
+static void      menuEventHandlerCB(lv_event_t *e);
 
 void qoreXLCDInit() {
   // Initialization of the display
@@ -28,20 +30,30 @@ void qoreXLCDInit() {
 void setupScreens() {
   BME280Screen   = createBME280Screen();
   ICM20948Screen = createICM2094Screen();
+  startUpScreen  = createStartUpScreen();
 
-  createStartUpScreen();
+  lv_scr_load(startUpScreen);
+  currentScreen = StartUpMenu;
 
   delay(3000);
 
   lv_screen_load(BME280Screen);
+  currentScreen = BME280Menu;
 }
 
-static void createStartUpScreen() {
+static lv_obj_t *createStartUpScreen() {
+  lv_obj_t *screen = lv_obj_create(NULL);
+
   LV_IMAGE_DECLARE(screen_start_up);
 
-  lv_obj_t *boot_screen = lv_image_create(lv_screen_active());
-  lv_image_set_src(boot_screen, &screen_start_up);
-  lv_obj_align(boot_screen, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_t *bootImg = lv_image_create(screen);
+
+  lv_image_set_src(bootImg, &screen_start_up);
+  lv_obj_align(bootImg, LV_ALIGN_CENTER, 0, 0);
+
+  createBottomSwitch(screen);
+
+  return screen;
 }
 
 void touchInit() {
@@ -109,10 +121,33 @@ static void menuEventHandlerCB(lv_event_t *e) {
   switch (btnType) {
     case NEXT_BUTTON:
       Serial.println("Next button is pressed");
+
+      if (currentScreen == StartUpMenu) {
+        lv_scr_load(BME280Screen);
+        currentScreen = BME280Menu;
+      } else if (currentScreen == BME280Menu) {
+        lv_scr_load(ICM20948Screen);
+        currentScreen = ICM20948Menu;
+      } else {
+        lv_scr_load(startUpScreen);
+        currentScreen = StartUpMenu;
+      }
+
       break;
 
     case PREV_BUTTON:
       Serial.println("Prev button is pressed");
+      if (currentScreen == StartUpMenu) {
+        lv_scr_load(ICM20948Screen);
+        currentScreen = ICM20948Menu;
+      } else if (currentScreen == BME280Menu) {
+        lv_scr_load(startUpScreen);
+        currentScreen = StartUpMenu;
+      } else {
+        lv_scr_load(BME280Screen);
+        currentScreen = BME280Menu;
+      }
+
       break;
 
     default:
