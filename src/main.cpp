@@ -2,9 +2,13 @@
 #include <SPI.h>
 #include <Wire.h>
 
+#include <memory>
+
 #include "FT6336U.h"
 #include "bme280_helper.h"
 #include "icm20948_helper.h"
+#include "qore-x/qore-x.h"
+#include "qore-x/sensor.h"
 #include "qore-x_display.h"
 
 #define DEFAULT_DELAY 1000
@@ -29,6 +33,8 @@ TFT_eSPI        tft;
 
 static void helloWorldFromLVGL();
 
+SensorData *sensorData = new SensorData();
+
 void setup() {
   uint8_t status;
 
@@ -42,13 +48,16 @@ void setup() {
   qoreXLCDInit();
 
   /* BME280 INIT */
-  Serial.println("Initializing BME280");
-  status = bme.begin(0x76);
-  if (!status) {
-    Serial.println(
-        "Could not find a valid BME280 sensor, check wiring, address, sensor "
-        "ID!");
-  }
+  // Serial.println("Initializing BME280");
+  // status = bme.begin(0x76);
+  // if (!status) {
+  //   Serial.println(
+  //       "Could not find a valid BME280 sensor, check wiring, address, sensor "
+  //       "ID!");
+  // }
+
+
+  // BME280 sensor;
 
   /* ICM 20948 INIT */
   Serial.println("Initializing ICM20948");
@@ -105,7 +114,8 @@ static void helloWorldFromLVGL() {
 
   // create button demo
   // lv_obj_t *btn =
-  //     lv_button_create(lv_screen_active()); /*Add a button the current screen*/
+  //     lv_button_create(lv_screen_active()); /*Add a button the current
+  //     screen*/
   // lv_obj_set_size(btn, 120, 50);            /*Set its size*/
   // lv_obj_align(btn, LV_ALIGN_BOTTOM_MID, 0, 0);
   // lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_PRESSED,
