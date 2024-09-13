@@ -6,8 +6,6 @@
 
 #include <string>
 
-#include "qore-x.h"
-
 #define BME280_ADDR          0x76
 #define ICM20948_ADDR        0x68
 #define SEALEVELPRESSURE_HPA (1013.25)
