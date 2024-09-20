@@ -11,13 +11,25 @@ BME280::BME280() {
   }
 }
 
-void BME280::printBME280Data() const {
+void BME280::printBME280Data(const BMEData &data) const {
   Serial.println("==================");
   Serial.println("BME280 Sensor Data");
   Serial.println("==================");
 
-  // Serial.println("Temperature = ");
-  // Serial.print(data.bme.temperature);
+  Serial.print("Temperature = ");
+  Serial.println(data.temperature);
+
+  Serial.print("Pressure = ");
+  Serial.println(data.pressure);
+
+  Serial.print("Altitude = ");
+  Serial.println(data.altitude);
+
+  Serial.print("Humidity = ");
+  Serial.println(data.humidity);
+
+  // Serial.println("Pressure= ");
+  // Serial.print(getPressure);
 }
 
 float BME280::getTemperature() { return bme.readTemperature(); }
