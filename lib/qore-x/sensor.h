@@ -24,12 +24,15 @@ class BME280 {
   Adafruit_BME280 bme;
 };
 
-class ICM20949 {
+class ICM20948 {
  public:
-  ICM20949();
-  void printICM20948Data() const;
+  ICM20948();
+  void printICM20948Data(IMUData& data) const;
   void getAndPrintICMSpecs();
+  float getTemperature();
+  void getSensorData(IMUData& data);
 
  private:
   Adafruit_ICM20948 icm;
+  sensors_event_t accel, gyro, mag, temp;
 };

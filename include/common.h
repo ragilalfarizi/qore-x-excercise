@@ -12,6 +12,11 @@ struct BMEData {
 };
 
 struct IMUData {
-  Vector3D acceleration, altitude, humidity;
-  float    temperature;
+  struct {
+    float x;
+    float y;
+    float z;
+  } acceleration, gyro, magnetic;
+
+  float temperature;
 };

@@ -11,7 +11,7 @@ BME280::BME280() {
   }
 }
 
-void BME280::printBME280Data(const BMEData &data) const {
+void BME280::printBME280Data(const BMEData& data) const {
   Serial.println("==================");
   Serial.println("BME280 Sensor Data");
   Serial.println("==================");
@@ -41,15 +41,15 @@ float BME280::getHumidity() { return bme.readHumidity(); }
  * ICM20949
  **********************************************************/
 
-ICM20949::ICM20949() {
+ICM20948::ICM20948() {
   Serial.println("Initializing ICM20949");
 
   icm.begin_I2C(ICM20948_ADDR);
 
-  ICM20949::getAndPrintICMSpecs();
+  ICM20948::getAndPrintICMSpecs();
 }
 
-void ICM20949::getAndPrintICMSpecs() {
+void ICM20948::getAndPrintICMSpecs() {
   Serial.println();
 
   /* ACCELERATION RANGE */
@@ -139,8 +139,53 @@ void ICM20949::getAndPrintICMSpecs() {
   Serial.println();
 }
 
-void ICM20949::printICM20948Data() const {
+void ICM20948::printICM20948Data(IMUData& data) const {
   Serial.println("==================");
   Serial.println("ICM20948 Sensor Data");
   Serial.println("==================");
+
+  Serial.printf("Acceleration = %.2f, %.2f, %.2f\n", data.acceleration.x,
+                data.acceleration.y, data.acceleration.z);
+
+  Serial.printf("Gyro = %.2f, %.2f, %.2f\n", data.gyro.x, data.gyro.y,
+                data.gyro.z);
+
+  Serial.printf("Mag = %.2f, %.2f, %.2f\n", data.magnetic.x, data.magnetic.y,
+                data.magnetic.z);
+
+  Serial.printf("Temperature = %.2f\n", data.temperature);
+}
+
+float ICM20948::getTemperature() {
+  icm.getEvent(&accel, &gyro, &temp, &mag);
+  return temp.temperature;
+}
+
+void ICM20948::getSensorData(IMUData& data) {
+  if (icm.getEvent(&accel, &gyro, &temp, &mag)) {
+    Serial.printf("%.2f, %.2f, %.2f\n", accel.acceleration.x,
+                  accel.acceleration.y, accel.acceleration.z);
+    // Assign the acceleration data
+    data.acceleration.x = accel.acceleration.x;
+    data.acceleration.y = accel.acceleration.y;
+    data.acceleration.z = accel.acceleration.z;
+
+    Serial.printf("%.2f, %.2f, %.2f\n", data.acceleration.x,
+                  data.acceleration.y, data.acceleration.z);
+
+    // Assign the gyro data
+    data.gyro.x = gyro.gyro.x;
+    data.gyro.y = gyro.gyro.y;
+    data.gyro.z = gyro.gyro.z;
+
+    // Assign the temperature data
+    data.temperature = temp.temperature;
+
+    // Assign the magnitude data
+    data.magnetic.x = mag.magnetic.x;
+    data.magnetic.y = mag.magnetic.y;
+    data.magnetic.z = mag.magnetic.z;
+  } else {
+    Serial.println("Failed to read imu data");
+  }
 }
