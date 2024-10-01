@@ -1,9 +1,5 @@
 #pragma once
 
-struct Vector3D {
-  float x, y, z;
-};
-
 struct BMEData {
   float temperature;
   float pressure;

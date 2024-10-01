@@ -1,6 +1,9 @@
 #pragma once
 
 #include "qore-x_display.h"
+#include "common.h"
+
+extern BMEData bmeData;
 
 #ifdef __cplusplus
 extern "C" {
