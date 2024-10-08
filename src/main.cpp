@@ -5,6 +5,7 @@
 #include "common.h"
 #include "qore-x_display.h"
 #include "sensor.h"
+#include "sdcard.h"
 
 #define DEFAULT_DELAY 1000
 

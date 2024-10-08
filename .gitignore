@@ -1,2 +1,4 @@
-.pio
+.pio/*
+!.pio/libdeps/lv_conf.h
+
 .vscode
