@@ -1,11 +1,12 @@
 #include "qore-x_display.h"
 
 /* GLOBAL VARIABLES */
-lv_display_t   *disp           = NULL;
-lv_indev_t     *indev          = NULL;
-lv_obj_t       *BME280Screen   = NULL;
-lv_obj_t       *ICM20948Screen = NULL;
-lv_obj_t       *startUpScreen  = NULL;
+lv_display_t   *disp             = NULL;
+lv_indev_t     *indev            = NULL;
+lv_obj_t       *BME280Screen     = NULL;
+lv_obj_t       *ICM20948Screen   = NULL;
+lv_obj_t       *startUpScreen    = NULL;
+lv_obj_t       *fileSystemScreen = NULL;
 static uint32_t draw_buf[DRAW_BUF_SIZE / 4];
 static ScreenID currentScreen;
 
@@ -28,14 +29,15 @@ void qoreXLCDInit() {
 }
 
 void setupScreens() {
-  BME280Screen   = createBME280Screen();
-  ICM20948Screen = createICM2094Screen();
-  startUpScreen  = createStartUpScreen();
+  BME280Screen     = createBME280Screen();
+  ICM20948Screen   = createICM2094Screen();
+  startUpScreen    = createStartUpScreen();
+  fileSystemScreen = createFileSystemScreen();
 
   lv_scr_load(startUpScreen);
   currentScreen = StartUpMenu;
 
-  delay(3000);
+  delay(1000);
 
   lv_screen_load(BME280Screen);
   currentScreen = BME280Menu;
@@ -128,6 +130,9 @@ static void menuEventHandlerCB(lv_event_t *e) {
       } else if (currentScreen == BME280Menu) {
         lv_scr_load(ICM20948Screen);
         currentScreen = ICM20948Menu;
+      } else if (currentScreen == ICM20948Menu) {
+        lv_scr_load(fileSystemScreen);
+        currentScreen = FileSystemMenu;
       } else {
         lv_scr_load(startUpScreen);
         currentScreen = StartUpMenu;
@@ -138,14 +143,17 @@ static void menuEventHandlerCB(lv_event_t *e) {
     case PREV_BUTTON:
       Serial.println("Prev button is pressed");
       if (currentScreen == StartUpMenu) {
+        lv_scr_load(fileSystemScreen);
+        currentScreen = FileSystemMenu;
+      } else if (currentScreen == FileSystemMenu) {
         lv_scr_load(ICM20948Screen);
         currentScreen = ICM20948Menu;
-      } else if (currentScreen == BME280Menu) {
-        lv_scr_load(startUpScreen);
-        currentScreen = StartUpMenu;
-      } else {
+      } else if (currentScreen == ICM20948Menu) {
         lv_scr_load(BME280Screen);
         currentScreen = BME280Menu;
+      } else {
+        lv_scr_load(startUpScreen);
+        currentScreen = StartUpMenu;
       }
 
       break;
