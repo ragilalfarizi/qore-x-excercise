@@ -7,6 +7,7 @@
 #include "FT6336U.h"
 #include "qore-x_bme280_screen.h"
 #include "qore-x_icm20948_screen.h"
+#include "qore-x_filesystem_screen.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,6 +30,7 @@ enum ScreenID {
   StartUpMenu,
   BME280Menu,
   ICM20948Menu,
+  FileSystemMenu,
 };
 
 enum ButtonType {

@@ -5,6 +5,7 @@
 #include "common.h"
 #include "qore-x_display.h"
 #include "sensor.h"
+#include "sdcard.h"
 
 #define DEFAULT_DELAY 1000
 
@@ -33,6 +34,9 @@ void setup() {
   Serial.begin(115200);
   while (!Serial);  // time to get serial running
 
+  /* SD CARD INIT */
+  SD.begin(PIN_CS);
+
   /* DISPLAY INIT */
   Serial.println("Initializing Qore-X LCD");
   lv_init();  // Initialize LVGL
@@ -49,7 +53,7 @@ void setup() {
 
   Serial.print("\n===========================================\n");
 
-  xTaskCreatePinnedToCore(lvglTask, "LVGL Task", 4096, NULL, 5,
+  xTaskCreatePinnedToCore(lvglTask, "LVGL Task", 5120, NULL, 5,
                           &lvglTaskHandler, 1);
 
   xTaskCreatePinnedToCore(acqusitionDataTask, "Acquisition Data Task", 2048,
