@@ -34,6 +34,9 @@ void setup() {
   Serial.begin(115200);
   while (!Serial);  // time to get serial running
 
+  /* SD CARD INIT */
+  SD.begin(PIN_CS);
+
   /* DISPLAY INIT */
   Serial.println("Initializing Qore-X LCD");
   lv_init();  // Initialize LVGL
